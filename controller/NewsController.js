@@ -37,7 +37,7 @@ export const CryptoPrices = async(req , res ) => {
     );
     res.json(response.data);
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching coins:", error.message);
     res.status(500).json({ message: "Error fetching coins" });
   }
 }
