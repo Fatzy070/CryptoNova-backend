@@ -19,47 +19,41 @@ export const CryptoNews = async (req, res) => {
   }
 };
 
-export const CryptoPrices = async(req , res ) => {
-   const { page = 1 } = req.query;
 
+
+export const CryptoPrices = async (req, res) => {
   try {
-    const response = await axios.get(
-      "https://api.coingecko.com/api/v3/coins/markets",
-      {
-        params: {
-          vs_currency: "usd",
-          order: "market_cap_desc",
-          per_page: 20,
-          page,
-          sparkline: false,
-        },
-      }
-    );
-    res.json(response.data);
+    const response = await axios.get("https://api.coinpaprika.com/v1/tickers");
+    const data = response.data.slice(0, 20).map((coin) => ({
+      id: coin.id,
+      name: coin.name,
+      symbol: coin.symbol,
+      current_price: coin.quotes.USD.price,
+      price_change_percentage_24h: coin.quotes.USD.percent_change_24h,
+      image: `https://static.coinpaprika.com/coin/${coin.id}/logo.png`,
+    }));
+    res.json(data);
   } catch (error) {
     console.error("Error fetching coins:", error.message);
     res.status(500).json({ message: "Error fetching coins" });
   }
-}
-export const TopMarket = async(req , res ) => {
-   
+};
 
+export const TopMarket = async (req, res) => {
   try {
-    const response = await axios.get(
-      "https://api.coingecko.com/api/v3/coins/markets",
-      {
-        params: {
-          vs_currency: "usd",
-          order: "market_cap_desc",
-          per_page: 4,
-          page:1,
-          sparkline: false,
-        },
-      }
-    );
-    res.json(response.data);
+    const response = await axios.get("https://api.coinpaprika.com/v1/tickers");
+    const data = response.data.slice(0, 4).map((coin) => ({
+      id: coin.id,
+      name: coin.name,
+      symbol: coin.symbol,
+      current_price: coin.quotes.USD.price,
+      price_change_percentage_24h: coin.quotes.USD.percent_change_24h,
+      image: `https://static.coinpaprika.com/coin/${coin.id}/logo.png`,
+    }));
+    res.json(data);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error fetching coins" });
+    console.error("Error fetching top coins:", error.message);
+    res.status(500).json({ message: "Error fetching top coins" });
   }
-}
+};
+
