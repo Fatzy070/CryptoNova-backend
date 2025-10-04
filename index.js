@@ -9,8 +9,8 @@ const app = express()
 const PORT = process.env.PORT || 3000
 
 
-connectDB()
 dotenv.config()
+connectDB()
 
 app.use(cors())
 app.use(express.json())
